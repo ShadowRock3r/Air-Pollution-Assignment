@@ -1,6 +1,7 @@
-pollutantmean <- function( directory = "specdata", pollutant = "nitrate", id = 1) {
-  counter <- 0
+pollutantmean <- function( directory, pollutant, id) {
+  
   df <- data.frame()
+  
   if (pollutant == "nitrate"| pollutant == "sulfate"){
     if (length(id) == 1){
       if (id >= 1 && id <= 332){
@@ -10,31 +11,33 @@ pollutantmean <- function( directory = "specdata", pollutant = "nitrate", id = 1
         print(mean(df[[pollutant]], na.rm = TRUE))
         
       }else{
+        #Message in case of out of bounds id
         print(paste( id, "is not a valid id, The id must be between 1 and 332!"))
       }
       
     }else{ 
       for( i in id){
         
-        if (id[i] >= 1 && id[i] <= 332){
-          tempdf <- read.csv(paste0(directory,"/",sprintf( "%03d",id[i] ),".csv"))
+        if (i >= 1 && i <= 332){
+          #temporary df variable to store the required datasets
+          tempdf <- read.csv(paste0(directory,"/",sprintf( "%03d",i ),".csv"))
+          
+          #merging the required data in a unique data frame
           df <- rbind(df, tempdf)
-          #counter <- counter + 1
-          
-        #}else if(id[i] >= 1 && id[i] <= 332 && counter > 0){
-          #tempdf <- read.csv(paste0(directory,"/",sprintf( "%03d",id[i] ),".csv"))
-          #df <- rbind(df, tempdf)
-          
+        
         }else{
+          #Message in case of out of bounds id
           print(paste( id[i], "is not a valid id, The id must be between 1 and 332!"))
+          next
         }
       }
+      #return 
       print(mean(df[[pollutant]], na.rm = TRUE))
-      
-      }
+    }
   }else{
     print("Enter 'nitrate' or 'sulfate' as a pollutant.")
   }
 }
+
     
     
